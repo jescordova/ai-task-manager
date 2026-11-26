@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "rootDir": "src",
+    "outDir": "dist",
+    "esModuleInterop": true, // permet import express from "express"
+    "allowSyntheticDefaultImports": true, // compatibilité avec CommonJS
+    "strict": true
+  }
+}

@@ -1,0 +1,15 @@
+---
+import TaskList from "../components/TaskList.tsx";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+    <div class="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+        <div class="w-full max-w-2xl bg-white rounded-xl shadow-lg p-6">
+            <h1 class="text-3xl font-bold mb-6 text-center">
+            🚀 My Task Manager
+            </h1>
+            <TaskList client:load />
+        </div>
+    </div>
+</Layout>

@@ -1,0 +1,40 @@
+---
+import LoginForm from "../components/LoginForm";
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout>
+    <div class="bg-linear-to-br from-indigo-100 via-purple-50 to-pink-100 min-h-screen flex items-center justify-center p-4">
+        <!-- Carte principale avec effet de verre -->
+         <div class="w-full max-w-md">
+
+            <!-- Effet de flou et de transparence -->
+            <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">
+                
+                <!-- En-tête avec icône -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex p-4 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-2xl shadow-lg mb-4">
+                        <i class="fa-solid fa-lock text-3xl text-white"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                        Welcome Back!!!
+                    </h2>
+                    <p class="text-gray-500 mt-2">Connectez-vous à votre espace</p>
+                </div>
+
+                <!-- Formulaire -->
+                <LoginForm client:load />
+                
+            </div>
+
+            <!-- Badge "dernière génération" -->
+            <div class="text-center mt-6">
+                <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-white/50 text-sm">
+                    <i class="fa-solid fa-bolt text-yellow-500"></i>
+                    <span class="text-gray-600">Design dernière génération avec Tailwind CSS</span>
+                    <i class="fa-regular fa-sparkles text-purple-500"></i>
+                </span> 
+            </div>
+         </div>
+    </div>
+</Layout>

@@ -1,0 +1,87 @@
+---
+// src/components/Header.astro
+const currentDate = new Date().toLocaleDateString('fr-FR', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<header class="bg-white/10 backdrop-blur-xl border-b border-white/20 p-3 md:p-4 sticky top-0 z-40">
+  <div class="flex items-center justify-between gap-2 md:gap-4">
+    <!-- Bouton menu mobile (visible quand sidebar est caché) -->
+    <button 
+  class="md:hidden w-10 h-10 flex-none bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center text-white/60 hover:text-white transition-all"
+  id="mobileMenuBtn"
+>
+  <i class="fa-solid fa-bars text-lg"></i>
+</button>
+
+    <!-- Barre de recherche -->
+    <div class="flex-1 max-w-md">
+      <div class="relative group">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-white/40 group-hover:text-white/60 transition-colors text-sm md:text-base"></i>
+        <input
+          type="search"
+          placeholder="Rechercher..."
+          class="w-full pl-9 md:pl-11 pr-20 md:pr-24 py-2 md:py-3 bg-white/5 border border-white/20 rounded-xl md:rounded-2xl text-white placeholder-white/40 focus:outline-hidden focus:border-white/40 focus:bg-white/10 transition-all text-sm md:text-base"
+        />
+        <div class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 flex gap-1">
+          <kbd class="hidden sm:block px-1.5 md:px-2 py-0.5 md:py-1 bg-white/10 rounded-lg text-[10px] md:text-xs text-white/60">⌘</kbd>
+          <kbd class="hidden sm:block px-1.5 md:px-2 py-0.5 md:py-1 bg-white/10 rounded-lg text-[10px] md:text-xs text-white/60">K</kbd>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions et notifications -->
+    <div class="flex items-center gap-1 md:gap-3">
+      <!-- Date (cachée sur mobile) -->
+      <div class="hidden lg:flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-white/5 rounded-xl md:rounded-2xl border border-white/20">
+        <i class="fa-regular fa-calendar text-white/60 text-sm md:text-base"></i>
+        <span class="text-white/80 text-xs md:text-sm capitalize">{currentDate}</span>
+      </div>
+
+      <!-- Notifications -->
+      <button class="relative p-2 md:p-3 bg-white/5 hover:bg-white/10 rounded-xl md:rounded-2xl transition-all group">
+        <i class="fa-regular fa-bell text-white/60 group-hover:text-white text-sm md:text-base"></i>
+        <span class="absolute top-1 md:top-2 right-1 md:right-2 w-1.5 md:w-2 h-1.5 md:h-2 bg-red-500 rounded-full ring-2 ring-white/20"></span>
+      </button>
+
+      <!-- Messages -->
+      <button class="relative p-2 md:p-3 bg-white/5 hover:bg-white/10 rounded-xl md:rounded-2xl transition-all group">
+        <i class="fa-regular fa-envelope text-white/60 group-hover:text-white text-sm md:text-base"></i>
+        <span class="absolute -top-0.5 md:-top-1 -right-0.5 md:-right-1 min-w-4 md:min-w-5 h-4 md:h-5 px-1 bg-blue-500 rounded-full text-[8px] md:text-xs font-bold text-white flex items-center justify-center">3</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Gestionnaire pour le bouton menu mobile
+  document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', () => {
+        // Trouver le sidebar et l'expand
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+          sidebar.classList.remove('collapsed');
+          localStorage.setItem('sidebarCollapsed', 'false');
+          
+          // Mettre à jour l'icône du toggle dans le sidebar
+          const toggleIcon = document.getElementById('toggleIcon');
+          if (toggleIcon) {
+            toggleIcon.style.transform = 'rotate(0deg)';
+          }
+        }
+      });
+    }
+
+    // Écouter les changements d'état du sidebar pour ajuster le header
+    window.addEventListener('sidebarToggle', (e) => {
+      // Optionnel : ajuster quelque chose dans le header quand le sidebar change
+    });
+  });
+</script>

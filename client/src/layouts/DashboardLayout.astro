@@ -1,0 +1,39 @@
+---
+// src/layouts/DashboardLayout.astro
+import Sidebar from '../components/Sidebar.astro';
+import Header from '../components/Header.astro';
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Dashboard Tâches | Dernière Génération</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  </head>
+  <body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-svh font-sans antialiased overflow-hidden">
+    <div class="flex h-svh">
+      <!-- Sidebar avec état responsive -->
+      <Sidebar client:load />
+      
+      <!-- Contenu principal -->
+      <div class="flex-1 flex flex-col min-w-0 transition-all duration-300">
+        <Header />
+        <main class="flex-1 overflow-y-auto p-4 md:p-6">
+          <div class="max-w-7xl mx-auto animate-slide-up">
+            <slot />
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Script pour gérer l'état du sidebar dans le localStorage
+      const sidebarState = localStorage.getItem('sidebarCollapsed') === 'true';
+      document.documentElement.style.setProperty('--sidebar-width', sidebarState ? '80px' : '320px');
+    </script>
+  </body>
+</html>

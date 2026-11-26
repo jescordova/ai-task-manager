@@ -1,0 +1,27 @@
+---
+// src/components/TaskFilters.astro
+const filters = [
+  { label: 'Toutes', icon: 'fa-list', active: true },
+  { label: 'À faire', icon: 'fa-hourglass-half' },
+  { label: 'En cours', icon: 'fa-spinner' },
+  { label: 'Terminées', icon: 'fa-circle-check' },
+  { label: 'Archivées', icon: 'fa-box-archive' },
+];
+---
+
+<div class="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-4 mb-6">
+  <div class="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/20">
+    {filters.map((filter) => (
+      <button
+        class={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+          filter.active
+            ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+            : 'text-white/60 hover:bg-white/10 hover:text-white'
+        }`}
+      >
+        <i class={`fa-solid ${filter.icon}`}></i>
+        <span class="font-medium">{filter.label}</span>
+      </button>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,22 @@
+# Dépendances
+node_modules/
+
+# Build
+dist/
+
+# Secrets — JAMAIS committer
+.env
+.env.*
+*credentials*
+atlas-credentials*
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS / éditeur
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

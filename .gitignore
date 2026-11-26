@@ -1,0 +1,17 @@
+# Racine : on ignore les artefacts des deux apps
+**/node_modules/
+**/dist/
+**/.astro/
+
+# Secrets (ceinture + bretelles, même si server/.gitignore existe)
+**/.env
+**/.env.*
+**/*credentials*
+**/atlas-credentials*
+
+# Logs & OS
+**/*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
