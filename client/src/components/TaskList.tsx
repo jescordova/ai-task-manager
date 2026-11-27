@@ -59,6 +59,12 @@ export default function TaskList() {
         );
     };
 
+        const handleLogout = () => {
+        localStorage.removeItem("token"); // On efface le badge JWT
+        window.location.href = "/login";  // On renvoie l'utilisateur vers la page de login
+    };
+
+
     if (loading) {
         return <div className="p-4">Loading tasks...</div>;
     }
@@ -67,53 +73,51 @@ export default function TaskList() {
         return <div className="p-4 text-red-500">Error: {error}</div>;
     }
 
-    return (
+        return (
         <div className="space-y-4">
-            <h2 className="text-xl font-bold">My Tasks 📋</h2>
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">My Tasks 📋</h2>
+                <button 
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition font-medium text-sm"
+                >
+                    Se déconnecter
+                </button>
+            </div>
             <CreateTask onCreated={fetchTasks} />
             {tasks.length === 0 ? (
                 <p className="text-gray-500">No tasks found. Create your first task!</p>
             ) : (
                 tasks.map((task) => (
                     <div key={task._id} className="bg-gray-50 p-4 rounded-lg flex justify-between items-center hover:shadow transition">
+                        {/* Côté gauche : Titre, Description, Statut */}
                         <div>
-                            <h3 className="text-lg font-semibold">
-                            <span
-                                className={`font-medium ${
-                                    task.completed ? "line-through text-gray-400" : ""
-                                }`}
-                                >
+                            <h3 className={`text-lg font-semibold ${task.completed ? "line-through text-gray-400" : ""}`}>
                                 {task.title}
-                            </span>       
                             </h3>
-                            {task.description && (<p className="text-gray-600 mt-1">{task.description}</p>)}
-                            <p className="text-sm">
+                            {task.description && (
+                                <p className="text-gray-600 mt-1">{task.description}</p>
+                            )}
+                            <p className="text-sm mt-1">
                                 Completed: {task.completed ? "✅ Yes" : "❌ No"}
                             </p>                    
                         </div>
 
-                        {/* Update Task */}
-                        <div className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            checked={task.completed}
-                            onChange={() => toggleComplete(task._id, task.completed)}
+                        {/* Côté droit : Checkbox et Delete */}
+                        <div className="flex items-center gap-4">
+                            <input
+                                type="checkbox"
+                                className="w-5 h-5 cursor-pointer"
+                                checked={task.completed}
+                                onChange={() => toggleComplete(task._id, task.completed)}
                             />
-
-                        <span
-                            className={task.completed ? "line-through text-gray-400" : ""}
+                            <button
+                                onClick={() => handleDelete(task._id)}
+                                className="text-sm text-red-500 hover:text-red-700 transition font-medium"
                             >
-                            {task.title}
-                        </span>
+                                Delete 🗑️
+                            </button>
                         </div>
-
-                        {/* Delete Task*/}
-                        <button
-                            onClick={() => handleDelete(task._id)}
-                            className="text-sm text-red-500 hover:text-red-700 transition"
-                        >
-                            Delete  🗑️
-                        </button>
                     </div>
                 ))
             )}

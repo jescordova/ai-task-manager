@@ -3,8 +3,9 @@ const API_URL = "http://localhost:4000";
 export interface Task {
   _id: string;
   title: string;
+  description?: string;
   completed: boolean;
-  // description?: string;
+  user: string
 }
 
 interface TasksResponse {
@@ -33,6 +34,27 @@ export const loginUser = async (email: string, password: string) => {
     return data; // Return the entire response data (including token and userId)
   } catch (error) {
     console.error("Error during login:", error);
+    throw error;
+  }
+}
+
+export const registerUser = async (name: string, email: string, password: string) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Registration failed");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error during registration:", error);
     throw error;
   }
 }

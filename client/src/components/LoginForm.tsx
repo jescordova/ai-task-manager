@@ -109,7 +109,7 @@ export default function LoginForm() {
                 {/* Lien d'inscription */}
                 <p className="text-center text-gray-500 text-sm mt-8">
                     Pas encore de compte ? 
-                    <a href="#" className="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors">
+                    <a href="/register" className="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors">
                         S'inscrire
                     </a>
                 </p>
