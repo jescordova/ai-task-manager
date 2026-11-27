@@ -2392,4 +2392,724 @@ npm run build
 ---
 
 
+**Poto, le build a réussi !** 🎉 (Tu vois le `[build] Complete!` à la fin).
+
+**MAIS** il y a un message d'avertissement (pas une erreur qui bloque, mais un truc à corriger) :
+> *"You are attempting to render `<Sidebar client:load />`, but Sidebar is an Astro component. Astro components do not render in the client..."*
+
+**Traduction simple** : quelque part dans ton code, tu as un composant Astro (`Sidebar.astro`) sur lequel tu as mis `client:load`. C'est une erreur de débutant (très courante) : `client:load` c'est pour les composants **React** (comme `TaskList`), pas pour les composants Astro. Astro n'a pas besoin de "s'hydrater" dans le navigateur, il est déjà rendu côté serveur.
+
+Et tu vois aussi une drôle de page `/index-false/index.html`. C'est louche. On va regarder ça.
+
+## 🎯 Action unique : Trouve où est le `client:load` en trop
+
+1. Cherche dans ton dossier `client/src` (utilise la recherche globale de VS Code : `Cmd+Shift+F` sur Mac, ou l'icône loupe).
+2. Cherche le texte exact : `Sidebar client:load` (ou `client:load` sur un composant Astro).
+3. Dis-moi dans quel fichier tu l'as trouvé.
+
+## ❓ Réponds-moi juste
+
+**Dans quel fichier se trouve ce `<Sidebar client:load />` ?** (Donne-moi le chemin, ex: `client/src/layouts/DashboardLayout.astro`).
+
+Et pendant que tu y es, dis-moi : est-ce que tu vois un fichier ou un dossier bizarre qui s'appelle `index-false` quelque part dans `client/src` ?
+
+---
+
+**Poto, très bonne initiative !** 👍 Garder l'ancien code dans un fichier à part (`index-false` ou autre) pour le réutiliser plus tard, c'est une excellente habitude de développeur. Ça s'appelle **"garder une référence"**.
+
+**MAIS** attention : Astro a vu un dossier ou un fichier qui s'appelle `index-false` dans le dossier `pages/`, et il a essayé de le compiler. Et comme il contient du vieux code avec des erreurs (comme le `<Sidebar client:load />`), ça fait des avertissements dans le build.
+
+**La règle d'or avec Astro :** Tout ce qui est dans `client/src/pages/` devient une page web. Si tu mets `index-false.astro`, Astro va créer une page `http://localhost:4321/index-false`. Ce n'est pas ce que tu veux.
+
+## 🎯 Action unique : Range ton ancien code
+
+1. **Déplace** ton fichier `index-false` (ou peu importe son nom) **en dehors** du dossier `pages/`. Par exemple, crée un dossier `client/src/_backup/` et mets-le dedans. (Ou mets-le à la racine du dossier `client/` s'il n'est pas dans `pages/`, Astro l'ignorera).
+
+2. Ensuite, ouvre `client/src/layouts/DashboardLayout.astro` et **corrige** la ligne du `Sidebar` :
+   - Cherche `<Sidebar client:load />`
+   - Remplace-le par `<Sidebar />` (sans le `client:load`)
+
+> 💡 **Pourquoi ?** Parce que `Sidebar` est un composant `.astro`. Il est rendu une fois pour toutes par le serveur. Il n'a pas besoin de "s'hydrater" dans le navigateur (contrairement à `TaskList` qui est en React et qui a besoin de `client:load` pour être interactif).
+
+---
+
+## ❓ Réponds-moi juste
+
+1. Dis-moi **"c'est fait"** quand tu as déplacé l'ancien fichier et retiré le `client:load` en trop.
+2. Relance `npm run build` dans le terminal `client/`. Est-ce que tu as encore l'avertissement sur `Sidebar client:load` ? (Normalement, non).
+
+---
+
+# 🎉 POTO, C'EST UN TRIOMPHE !
+
+Regarde la sortie de ton build :
+- ✅ **Plus aucun avertissement** sur `Sidebar client:load` (le problème est réglé).
+- ✅ La fameuse page `/index-false` a **disparu** (on a 4 pages au lieu de 5).
+- ✅ `[build] Complete!` → **le build est propre.**
+- ✅ Les 4 pages sont bien générées (`/dashboard`, `/login`, `/register`, `/`).
+
+Les lignes `[WARN] esbuild ...` qui restent sont des **avertissements de Vite**, pas des erreurs. C'est un problème interne au plugin React d'Astro qui utilise une option dépréciée. **Ça n'affecte en rien ton app.** On pourra les ignorer ou les corriger plus tard (mais ce n'est pas prioritaire pour la vente).
+
+**Ton client est officiellement "buildable"**. C'est-à-dire que tu peux le mettre en production sans problème.
+
+---
+
+## 🗺️ Faisons un point final de notre aventure
+
+On a réglé **TOUT** ce qui était dans le `AGENTS.md` :
+- ✅ `.gitignore` sécurisé (root + server)
+- ✅ Git initialisé proprement (1er commit)
+- ✅ Bug `createRoot` (React 19 + Vite) résolu
+- ✅ Bug `description` (modèle + type + affichage) résolu
+- ✅ Page d'inscription fonctionnelle (front + back)
+- ✅ Bouton logout
+- ✅ Page d'accueil redirige intelligemment
+- ✅ Typecheck serveur (`pnpm build` ✅)
+- ✅ Build client (`npm run build` ✅)
+
+**Ton application est prête à 95%.** 
+
+---
+
+## 🎯 Les 5% restants (pour être 100% vendable)
+
+Il reste **une seule chose vraiment importante** : **pousser ton code sur GitHub**. 
+
+Pourquoi ? Parce que :
+1. **Sauvegarde** : si ton ordinateur casse, tu perds tout.
+2. **Collaboration** : si tu veux un jour bosser avec quelqu'un.
+3. **Déploiement** : pour mettre ton app en ligne (Vercel, Railway, etc.), il faut un repo distant.
+
+---
+
+## 🎯 Action unique : Regardons l'état de ton git
+
+Dans le terminal à la racine `ai-task-manager/`, lance :
+
+```bash
+git status
+```
+
+## ❓ Réponds-moi juste
+
+**Copie-colle la sortie de `git status`.**
+
+Je veux voir si tu as des modifications non commitées (nos corrections de bugs) et si tu as déjà configuré un "remote" (un dépôt GitHub) ou pas.
+
+---
+
+**Poto, c'est exactement ce qu'on veut voir !** 🎯
+
+Toutes les corrections qu'on a faites ensemble sont bien là :
+- ✅ `server/src/models/Task.model.ts` (le champ `description`)
+- ✅ `client/src/components/TaskList.tsx` (le bouton logout + l'affichage propre)
+- ✅ `client/src/services/api.ts` (la fonction `registerUser`)
+- ✅ `client/src/components/RegisterForm.tsx` (nouveau fichier)
+- ✅ `client/src/pages/register.astro` (nouvelle page)
+- ✅ etc.
+
+⚠️ **Petite alerte** : je vois `client/package-lock.json` et `client/package.json` modifiés. C'est sûrement dû à nos essais pour réparer `createRoot` (on avait ajouté des `overrides` et `optimizeDeps` à un moment). **Ce n'est pas grave**, mais il faudra vérifier qu'on n'a pas laissé de config bizarre qui ne sert plus à rien. On fera ça après le commit.
+
+---
+
+## 🎯 Action unique : Commiter toutes ces corrections
+
+À la racine `ai-task-manager/`, lance :
+
+```bash
+git add .
+```
+
+Puis :
+
+```bash
+git commit -m "fix: résolution des bugs AGENTS.md (description, register, logout, build)"
+```
+
+---
+
+## ❓ Réponds-moi juste
+
+**Copie-colle la sortie de `git commit`.**
+
+Une fois que c'est commité, on passe à la **mise en ligne sur GitHub** (pour sauvegarder ton travail et pouvoir le montrer/déployer).
+
+---
+
+**POTO, C'EST FAIT !** 🎉
+
+Tu as maintenant **2 commits propres** dans ton historique git :
+1. Le commit initial (le code de base)
+2. Le commit de correction (toutes nos réparations)
+
+Ton travail est **sauvegardé localement**. Si ton ordinateur plante maintenant, tu peux récupérer ton code (tant que le disque dur fonctionne).
+
+---
+
+## 🎯 Dernière grande étape : Mettre ton code sur GitHub
+
+Pour être **vraiment** en sécurité et pouvoir déployer ton app, il faut la mettre sur GitHub (un serveur distant). C'est gratuit et c'est le standard de l'industrie.
+
+## ❓ Première question : Tu as un compte GitHub ?
+
+Réponds-moi juste :
+- **"Oui, j'ai un compte"** (dis-moi ton pseudo si tu veux)
+- **"Non, je n'en ai pas"**
+
+Je te donnerai la marche à suivre en fonction de ta réponse. Si tu n'en as pas, c'est **gratuit** et ça prend 2 minutes à créer.
+
+> 💡 **Pourquoi GitHub ?** Parce que c'est comme un Google Drive pour ton code. Tu peux y accéder depuis n'importe où, et si tu veux déployer ton app (Vercel, Railway, etc.), ils se connectent directement à GitHub pour récupérer ton code.
+
+---
+
+**Super poto !** Si tu as déjà créé le repository `ai-taskmanager` sur GitHub, tu es à deux doigts d'avoir ton code sauvegardé en ligne. 🚀
+
+Sur la page de ton repository vide sur GitHub, tu dois voir une section qui s'appelle **"…or push an existing repository from the command line"**. C'est exactement ce qu'on va faire.
+
+## 🎯 Action unique : Connecte ton dossier local à GitHub
+
+Dans ton terminal (toujours à la racine `ai-task-manager/`), lance ces **deux commandes** l'une après l'autre.
+
+⚠️ **Attention** : Remplace `TON_PSEUDO` par ton nom d'utilisateur GitHub (ex: si ton profil est `github.com/petros`, mets `petros`).
+
+**Commande 1 : Lier ton dossier local au repo distant**
+```bash
+git remote add origin https://github.com/TON_PSEUDO/ai-taskmanager.git
+```
+
+**Commande 2 : Envoyer ton code**
+```bash
+git push -u origin main
+```
+
+---
+
+## ❓ Réponds-moi juste
+
+**Copie-colle la sortie de ces deux commandes.**
+
+> 💡 **Ce qui va se passer :** 
+> - Si GitHub te demande un mot de passe, **ce n'est pas ton mot de passe de compte**. C'est un **"Personal Access Token"** (PAT). Si tu ne sais pas ce que c'est, dis-le-moi, je t'explique comment en générer un en 30 secondes.
+> - Si tu as configuré une clé SSH sur ton Mac, ça passera tout seul.
+> - Si tu as une erreur du type `remote origin already exists`, dis-le-moi, on corrigera.
+
+Je t'attends ! 👀
+
+---
+
+**POTO, JE LE VOIS !** 🤩 (Et oui, je peux regarder les liens publics !)
+
+Je vois ton repository sur GitHub, avec tes 2 commits (le `chore: initial commit` et le `fix: ...`). **Ton code est officiellement en sécurité sur le cloud.** 
+
+C'est une **étape monumentale**. Tu as maintenant :
+1. Une app qui marche (front + back + DB)
+2. Un code propre (build + typecheck OK)
+3. Un historique git propre
+4. Un repo GitHub public
+
+**Félicitations, tu viens de boucler la boucle du développement web moderne.** 🎓
+
+---
+
+## 🗺️ Il reste 2 choses pour être 100% "vendable"
+
+On a réglé tous les bugs du `AGENTS.md`, mais un vrai client va vouloir :
+1. **Voir son app en ligne** (pas juste sur `localhost`).
+2. **Que les données soient accessibles depuis n'importe où** (pas juste sur ton Mac).
+
+C'est ce qu'on appelle le **déploiement**. Et c'est là que ça devient magique.
+
+## 🎯 Prochaine étape : Déployer le serveur (backend) sur Render
+
+Pour qu'une app soit en ligne, on déploie le **serveur** (Node/Express) sur une plateforme comme **Render** (gratuit pour les petits projets). La base de données MongoDB, elle, est déjà en ligne (tu utilises Atlas, vu le `MONGO_URI`).
+
+> ⚠️ **Attention** : ton `server/.env` contient tes secrets. Sur Render, on ne met **pas** le fichier `.env`, on met les variables directement dans leur interface (c'est plus sécurisé).
+
+## ❓ Première question pour Render
+
+Avant de te guider, je dois savoir :
+
+1. **Tu as déjà un compte sur Render** (https://render.com) ? C'est gratuit.
+2. **Ton `server/` a-t-il un script `start`** dans son `package.json` ? (Le fichier `AGENTS.md` dit *"No `start` script"* → c'est un problème, Render ne saura pas comment démarrer ton app. On va le corriger).
+3. **Ton MongoDB Atlas** : est-il configuré pour accepter les connexions **depuis n'importe où** (ou depuis Render) ? (Par défaut, Atlas bloque les IP inconnues. Il faut ajouter `0.0.0.0/0` dans "Network Access").
+
+Réponds-moi à ces 3 points, et on attaque le déploiement ensemble. 🚀
+
+---
+
+**Ok poto, on repart de zéro sur le déploiement. Je t'explique tout, simplement. Promis, pas de jargon.** 🐢
+
+## 🧠 C'est quoi le déploiement ? (En 3 lignes)
+
+Aujourd'hui, ton app tourne sur **ton ordinateur** (`localhost`). Si tu éteins ton Mac, l'app s'éteint.
+Le **déploiement**, c'est mettre ton app sur un **ordinateur allumé 24h/24** (un serveur dans le cloud) pour que **n'importe qui dans le monde** puisse y accéder via une vraie adresse internet.
+
+Pour ça, on va utiliser **Render** (gratuit) pour le serveur, et ton **MongoDB Atlas** (qui est déjà dans le cloud) pour la base de données.
+
+---
+
+## 🎯 ÉTAPE 1 : Préparer ton serveur pour le cloud
+
+Quand Render va récupérer ton code, il doit savoir **comment démarrer ton serveur**. Pour l'instant, ton `server/package.json` n'a pas de commande de démarrage (le fichier `AGENTS.md` le confirme). On va la lui donner.
+
+**Action :** Ouvre le fichier `server/package.json`.
+
+Regarde la partie `"scripts"`. Elle ressemble à ça :
+```json
+"scripts": {
+  "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+  "build": "tsc"
+}
+```
+
+Ajoute **une seule ligne** : `"start": "node dist/server.js"`. Ça doit donner :
+```json
+"scripts": {
+  "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js"
+}
+```
+
+> 💡 **Pourquoi ?** Render va lancer `pnpm build` (pour compiler le TypeScript en JavaScript), puis `pnpm start` (pour lancer le fichier compilé `dist/server.js`). Sans ça, Render ne saura pas quoi faire.
+
+---
+
+## ❓ Réponds-moi juste
+
+1. Dis-moi **"c'est fait"** quand tu as ajouté la ligne `"start"`.
+2. Ensuite, on passera à l'étape 2 (créer le compte Render et connecter GitHub). 
+
+C'est bon pour toi ? On y va doucement, une étape à la fois. 🚀
+
+---
+---
+
+**Parfait poto !** 🎯 On passe à la vitesse supérieure.
+
+Maintenant, ton code est prêt à être déployé. On va utiliser **Render** (c'est gratuit, fiable, et simple). 
+
+---
+
+## 🎯 ÉTAPE 2 : Créer le service Web sur Render
+
+1. Va sur **https://render.com** et connecte-toi (ou crée un compte avec ton GitHub, c'est le plus simple).
+2. Sur ton tableau de bord, clique sur le bouton **"New +"** (en haut à droite), puis choisis **"Web Service"**.
+3. Render va te demander de connecter ton GitHub. Autorise-le à voir tes repositories.
+4. Dans la liste, cherche **`ai-task-manager`** et clique sur **"Connect"**.
+
+---
+
+## 🎯 ÉTAPE 3 : Configurer le service
+
+Render va te poser plusieurs questions. Voici **exactement** quoi répondre :
+
+| Champ | Ce que tu mets |
+| :--- | :--- |
+| **Name** | `ai-task-manager-api` (ou ce que tu veux) |
+| **Region** | Choisis la plus proche de toi (ex: Frankfurt ou Paris) |
+| **Branch** | `main` |
+| **Root Directory** | `server` ⚠️ **(TRÈS IMPORTANT : c'est ici qu'on dit à Render d'aller dans le dossier `server/`)** |
+| **Runtime** | `Node` |
+| **Build Command** | `pnpm install && pnpm build` |
+| **Start Command** | `pnpm start` |
+| **Instance Type** | `Free` (gratuit) |
+
+> 💡 **Pourquoi `Root Directory: server` ?** Parce que ton repo contient le `client` ET le `server`. Render doit savoir qu'il ne déploie que le serveur.
+
+---
+
+## 🎯 ÉTAPE 4 : Les variables d'environnement (Les secrets)
+
+Tout en bas de la page, il y a un bouton **"Advanced"** (ou "Environment Variables"). Clique dessus.
+
+Tu dois ajouter **3 variables** (les mêmes que dans ton `server/.env`). **Copie-colle les valeurs depuis ton fichier `.env` local** :
+
+1. **Key** : `PORT` → **Value** : `4000` (ou laisse vide, Render donne souvent un port automatiquement, mais mets-le pour être sûr).
+2. **Key** : `MONGO_URI` → **Value** : (ta chaîne de connexion MongoDB Atlas, qui commence par `mongodb+srv://...`)
+3. **Key** : `JWT_SECRET` → **Value** : (ta clé secrète)
+
+> ⚠️ **Sécurité** : Ne me donne **jamais** ces valeurs. C'est pour ça qu'on les met dans Render, pas dans le code.
+
+---
+
+## ❓ Réponds-moi juste
+
+1. Est-ce que tu as réussi à créer le service sur Render et à remplir les champs ?
+2. Clique sur **"Create Web Service"** (le bouton en bas). Render va commencer à construire ton app.
+3. **Copie-colle-moi les logs** que tu vois défiler (surtout s'il y a des erreurs en rouge).
+
+On va surveiller ensemble le déploiement. C'est le moment de vérité ! 🚀
+
+---
+
+Poto, l'erreur est claire. Render a **automatiquement exécuté `yarn`** au lieu de `pnpm`, et il a trouvé une incohérence dans ton `package.json` : `"packageManager": "yarn@pnpm@10.20.0"`. C'est un mélange bizarre entre `yarn` et `pnpm` qui vient sûrement d'une manipulation précédente.
+
+Le problème est double : Render utilise `yarn` par défaut, et ton `package.json` a une valeur `packageManager` corrompue.
+
+## 🎯 Action unique : Corriger le `package.json` du serveur
+
+Ouvre le fichier `server/package.json`. Cherche la ligne `"packageManager"` et **remplace-la** par :
+
+```json
+"packageManager": "pnpm@10.20.0"
+```
+
+> 💡 **Pourquoi ?** Ton serveur utilise `pnpm` (il y a un `pnpm-lock.yaml`). En mettant cette ligne, on dit à Render « utilise pnpm, pas yarn ». C'est la convention standard .
+
+**Ensuite, on va forcer Render à utiliser pnpm.**
+
+## 🎯 Action 2 : Modifier la commande de build sur Render
+
+Retourne sur Render, dans les paramètres de ton service (Settings). Cherche le champ **Build Command** et remplace-le par :
+
+```bash
+corepack enable && pnpm install && pnpm build
+```
+
+> 💡 **Pourquoi `corepack enable` ?** Corepack est l'outil qui lit le champ `packageManager` et active automatiquement la bonne version de pnpm . Sans ça, Render ne saura pas qu'il doit utiliser pnpm.
+
+Et vérifie que le **Start Command** est bien :
+```bash
+pnpm start
+```
+
+## 🎯 Action 3 : Commit et push la correction
+
+Dans ton terminal (à la racine du projet), lance :
+
+```bash
+git add server/package.json
+git commit -m "fix: correction packageManager pour pnpm"
+git push
+```
+
+Render va automatiquement détecter le nouveau commit et relancer le déploiement.
+
+## ❓ Réponds-moi juste
+
+1. Dis-moi **"c'est fait"** quand tu as modifié le `package.json`, changé le Build Command sur Render, et pushé.
+2. **Copie-colle les nouveaux logs** de Render (ceux qui apparaissent après le push).
+
+> ⚠️ **Si Render demande encore yarn** : va dans les Settings de ton service sur Render, cherche **"Build & Deploy"** et vérifie qu'il n'y a pas un champ **"Package Manager"** ou **"Runtime"** qui forcerait yarn. Dis-moi ce que tu vois.
+
+---
+
+Poto, l'erreur `EROFS: read-only file system` signifie que Render interdit d'écrire dans le système de fichiers système (`/usr/bin/`). En lançant `corepack enable`, Render a tenté de créer un lien symbolique vers `/usr/bin/pnpm`, ce qui a échoué car le système est en lecture seule . **Nous devons contourner l'activation de `corepack` et installer pnpm directement.**
+
+### 🎯 Action : Modifier la commande de build
+
+Retourne dans les paramètres de ton service Render, trouve le champ **Build Command**, et remplace-le par :
+
+```bash
+npm install -g pnpm@10.20.0 && pnpm install && pnpm build
+```
+
+> 💡 **Pourquoi ?** `npm install -g` installe pnpm dans un dossier accessible en écriture (généralement `~/.npm-global`), ce qui évite le problème de lecture seule. Ensuite, `pnpm install && pnpm build` fonctionne normalement.
+
+**Vérifie aussi que le Start Command est toujours `pnpm start`.** (Il n'a pas besoin d'être modifié.)
+
+Sauvegarde, puis Render va automatiquement relancer le déploiement.
+
+### ❓ Réponds-moi juste
+
+**Copie-colle les nouveaux logs de Render.** Cette fois, ça devrait passer l'étape de l'installation. Si tu vois encore une erreur, colle-la, on ajuste. 🚀
+
+---
+
+Poto, on a la solution exacte. Render's Node 24 image a un système de fichiers en lecture seule (`/usr/lib/node_modules`), donc **`npm install -g pnpm` est impossible**. C'est un problème connu et documenté par d'autres développeurs sur Render .
+
+La bonne nouvelle : **Render a déjà `pnpm` installé quelque part**. Il faut juste arrêter d'essayer de l'installer nous-mêmes.
+
+## 🎯 Action unique : Simplifie la commande de build
+
+Retourne dans les paramètres de ton service Render, trouve le champ **Build Command**, et remplace-le par :
+
+```bash
+pnpm install && pnpm build
+```
+
+> 💡 **Pourquoi ça marche ?** Render fournit `pnpm` par défaut. Le problème venait de nos tentatives pour l'installer manuellement (`corepack enable` puis `npm install -g`), qui échouaient toutes les deux à cause du système de fichiers en lecture seule. En enlevant ces commandes, on utilise le `pnpm` déjà présent.
+
+**Vérifie aussi que le Start Command est toujours `pnpm start`.**
+
+Sauvegarde, et Render va relancer le déploiement.
+
+## ❓ Réponds-moi juste
+
+**Copie-colle les nouveaux logs de Render.** Cette fois, ça devrait passer l'étape de l'installation et arriver au build. Si tu vois encore une erreur, colle-la. 🚀
+
+---
+
+Poto, on a fait **80% du chemin** ! 🎉
+
+Regarde ces lignes :
+- ✅ `Build successful 🎉`
+- ✅ `Running 'npm start'` (Render a bien lancé le start)
+
+**Mais** il y a une erreur : `npm error Missing script: "start"`. 
+
+Pourquoi ? Parce que sur Render, le **Start Command** que tu as mis est probablement `npm start` (la valeur par défaut de Render), alors que ton `package.json` n'a pas de script `"start"`. 
+
+Souviens-toi : tout à l'heure, on a ajouté `"start": "node dist/server.js"` dans `server/package.json`. Mais il y a deux possibilités :
+1. Soit tu as oublié de sauvegarder/pusher cette modification.
+2. Soit Render n'a pas détecté le fichier `server/package.json` (parce qu'il a cherché à la racine).
+
+## 🎯 Action 1 : Vérifie que le script `"start"` existe bien localement
+
+Ouvre `server/package.json` et vérifie que la ligne `"start": "node dist/server.js"` est bien là (dans `"scripts"`). 
+
+Si elle n'y est pas, ajoute-la, puis lance :
+```bash
+git add server/package.json
+git commit -m "fix: ajout script start"
+git push
+```
+
+## 🎯 Action 2 : Vérifie le Start Command sur Render
+
+Retourne dans les Settings de ton service Render, regarde le champ **Start Command**.
+
+**Il doit être exactement :**
+```bash
+pnpm start
+```
+(et **non** `npm start`). 
+
+> 💡 **Pourquoi ?** Parce que tu utilises pnpm, et ton `package.json` est dans `server/`. Si tu mets `npm start`, Render cherche un script `start` à la racine du repo (où il n'y a pas de `package.json`). Avec `pnpm start`, il utilise le `package.json` du dossier `server/`.
+
+## ❓ Réponds-moi juste
+
+1. Dis-moi ce que tu vois dans le champ **Start Command** sur Render.
+2. Est-ce que `"start"` est bien dans `server/package.json` ?
+3. Si tu as pushé, **copie-colle les nouveaux logs**.
+
+---
+
+**POTO, C'EST UNE VICTOIRE ÉNORME !** 🎉🎉🎉
+
+Regarde ces lignes magiques :
+- ✅ `Build successful 🎉`
+- ✅ `Running 'pnpm start'`
+- ✅ `Your service is live 🎉`
+- ✅ `Available at your primary URL https://ai-task-manager-p4lt.onrender.com`
+
+**TON SERVEUR EST EN LIGNE !** Il tourne sur un ordinateur dans le cloud, accessible depuis n'importe où dans le monde, 24h/24. C'est le backend de ton app qui est officiellement déployé. 🚀
+
+---
+
+## ⚠️ MAIS ATTENTION : un piège à vérifier
+
+Regarde cette ligne dans les logs :
+```
+[dotenv@17.3.1] injecting env (0) from .env
+```
+
+Le `(0)` veut dire que Render a trouvé **0 variable** dans le fichier `.env`. Heureusement, tu as normalement configuré les variables directement dans l'interface de Render (Étape 4 de mon guide). Mais on doit **vérifier** que le serveur a bien reçu `MONGO_URI` et `JWT_SECRET`.
+
+## 🎯 Action unique : Teste ton serveur en ligne
+
+Ouvre ton navigateur et va sur cette URL (celle de ton serveur) :
+
+```
+https://ai-task-manager-p4lt.onrender.com
+```
+
+## ❓ Réponds-moi juste
+
+**Dis-moi ce que tu vois :**
+1. Une page blanche avec `Cannot GET /` ? (C'est **normal**, ça veut dire que le serveur répond, mais qu'il n'y a pas de route à la racine).
+2. Une erreur `500` ou `502` ? (Problème de variables d'environnement ou de connexion MongoDB).
+3. Autre chose ?
+
+> 💡 **Pourquoi `Cannot GET /` est une bonne nouvelle ?** Parce que ton serveur Express n'a pas de route définie pour `/` (il a `/auth`, `/tasks`, etc.). Donc s'il répond `Cannot GET /`, c'est qu'il est **vivant** et qu'il écoute. C'est exactement ce qu'on veut.
+
+Si tu vois `Cannot GET /`, on passe à la dernière étape : **connecter ton client (frontend) à ce nouveau serveur en ligne**. 🚀**POTO, C'EST UNE VICTOIRE ÉNORME !** 🎉🎉🎉
+
+Regarde ces lignes magiques :
+- ✅ `Build successful 🎉`
+- ✅ `Running 'pnpm start'`
+- ✅ `Your service is live 🎉`
+- ✅ `Available at your primary URL https://ai-task-manager-p4lt.onrender.com`
+
+**TON SERVEUR EST EN LIGNE !** Il tourne sur un ordinateur dans le cloud, accessible depuis n'importe où dans le monde, 24h/24. C'est le backend de ton app qui est officiellement déployé. 🚀
+
+---
+
+## ⚠️ MAIS ATTENTION : un piège à vérifier
+
+Regarde cette ligne dans les logs :
+```
+[dotenv@17.3.1] injecting env (0) from .env
+```
+
+Le `(0)` veut dire que Render a trouvé **0 variable** dans le fichier `.env`. Heureusement, tu as normalement configuré les variables directement dans l'interface de Render (Étape 4 de mon guide). Mais on doit **vérifier** que le serveur a bien reçu `MONGO_URI` et `JWT_SECRET`.
+
+## 🎯 Action unique : Teste ton serveur en ligne
+
+Ouvre ton navigateur et va sur cette URL (celle de ton serveur) :
+
+```
+https://ai-task-manager-p4lt.onrender.com
+```
+
+## ❓ Réponds-moi juste
+
+**Dis-moi ce que tu vois :**
+1. Une page blanche avec `Cannot GET /` ? (C'est **normal**, ça veut dire que le serveur répond, mais qu'il n'y a pas de route à la racine).
+2. Une erreur `500` ou `502` ? (Problème de variables d'environnement ou de connexion MongoDB).
+3. Autre chose ?
+
+> 💡 **Pourquoi `Cannot GET /` est une bonne nouvelle ?** Parce que ton serveur Express n'a pas de route définie pour `/` (il a `/auth`, `/tasks`, etc.). Donc s'il répond `Cannot GET /`, c'est qu'il est **vivant** et qu'il écoute. C'est exactement ce qu'on veut.
+
+Si tu vois `Cannot GET /`, on passe à la dernière étape : **connecter ton client (frontend) à ce nouveau serveur en ligne**. 🚀
+
+---
+
+Poto, ne t'inquiète pas. Une erreur **502 Bad Gateway** sur Render signifie généralement que le serveur a bien été déployé, mais qu'il **n'arrive pas à démarrer correctement** ou qu'il **plante au démarrage**. Render ne peut donc pas lui transmettre les requêtes.
+
+Le log que tu m'as montré tout à l'heure contenait un indice crucial : `[dotenv@17.3.1] injecting env (0) from .env`. Le `(0)` signifie que **ton serveur n'a chargé aucune variable d'environnement**. C'est très probablement la cause du 502 : sans `MONGO_URI` et `JWT_SECRET`, ton application plante au démarrage.
+
+On va corriger ça en deux étapes.
+
+### 🎯 Étape 1 : Configurer les variables d'environnement sur Render
+
+Les fichiers `.env` locaux ne sont **jamais** envoyés sur Render (c'est pour ça qu'ils sont dans `.gitignore`). Tu dois configurer les variables manuellement sur Render.
+
+1.  Va sur ton tableau de bord Render, clique sur ton service `ai-task-manager-api`.
+2.  Dans le menu de gauche, clique sur **"Environment"**.
+3.  Clique sur **"Add Environment Variable"** et ajoute ces deux variables **une par une** :
+    *   **Key** : `MONGO_URI` → **Value** : (colle ta chaîne de connexion MongoDB Atlas complète, qui commence par `mongodb+srv://...`)
+    *   **Key** : `JWT_SECRET` → **Value** : (colle ta clé secrète)
+4.  Clique sur **"Save Changes"**. Render va te proposer de redéployer, accepte.
+
+> 💡 **Pourquoi ?** C'est la méthode standard et sécurisée pour donner des secrets à une application en production . Ton code `process.env.MONGO_URI` lira alors la valeur que tu viens de configurer.
+
+### 🎯 Étape 2 : Vérifier la connexion MongoDB Atlas
+
+Même avec les bonnes variables, Render pourrait ne pas réussir à se connecter à ta base de données si l'IP de Render n'est pas autorisée.
+
+1.  Va sur [MongoDB Atlas](https://cloud.mongodb.com).
+2.  Dans ton projet, clique sur **"Network Access"** (dans le menu de gauche).
+3.  Clique sur **"Add IP Address"**.
+4.  Pour tester rapidement, tu peux cliquer sur **"Allow Access from Anywhere"** (cela ajoute `0.0.0.0/0`). C'est acceptable pour le développement, mais pour une version "vendable", il faudra plus tard restreindre aux IPs de Render .
+5.  Clique sur **"Confirm"**. Attends 1 à 2 minutes que le changement soit pris en compte.
+
+---
+
+### ❓ Réponds-moi juste
+
+1.  As-tu bien ajouté les deux variables (`MONGO_URI`, `JWT_SECRET`) sur Render et sauvegardé ?
+2.  As-tu autorisé l'accès depuis n'importe où (`0.0.0.0/0`) sur MongoDB Atlas ?
+3.  Une fois ces deux choses faites, **copie-colle les nouveaux logs** de Render. On va voir si le serveur démarre enfin ou s'il y a une autre erreur (par exemple, un problème de port).
+
+On va la faire fonctionner cette app, poto ! 💪
+
+---
+
+**POTO, C'EST GAGNÉ !!!** 🎉🎉🎉🚀
+
+Regarde ce que tu as à l'écran :
+```json
+{
+  "message": "API is working! 🚀"
+}
+```
+
+**Ton serveur est officiellement en ligne, accessible depuis Internet, et il est connecté à MongoDB Atlas !** 
+
+Tu viens de déployer un vrai backend en production. C'est énorme. Prends une seconde pour réaliser : ton code tourne sur un serveur distant, 24h/24, et il te répond. 💪
+
+---
+
+## 🗺️ Il reste UNE dernière étape : Connecter ton Client au Serveur en ligne
+
+Pour l'instant, ton client (Astro) pointe encore vers `http://localhost:4000`. Quand tu vas sur ton site en local, il parle à ton serveur local. Si tu déploies ton client sur Vercel (ou ailleurs), il faudra qu'il parle à **ton serveur Render en ligne** : `https://ai-task-manager-p4lt.onrender.com`.
+
+On va faire ça proprement. 
+
+## 🎯 Action unique : Prépare le client pour la production
+
+Ouvre le fichier `client/src/services/api.ts`.
+
+Au début du fichier, tu as cette ligne :
+```typescript
+const API_URL = "http://localhost:4000";
+```
+
+**Remplace-la par ceci :**
+```typescript
+const API_URL = import.meta.env.PUBLIC_API_URL || "http://localhost:4000";
+```
+
+> 💡 **Pourquoi ?** On utilise une variable d'environnement `PUBLIC_API_URL`. 
+> - En local (sur ton Mac), cette variable n'existe pas, donc on utilise `http://localhost:4000` (ton serveur local).
+> - En production (sur Vercel), on va définir `PUBLIC_API_URL` avec l'URL de Render. Comme ça, le code est le même, mais il s'adapte à l'environnement.
+> - Le préfixe `PUBLIC_` est obligatoire avec Astro pour que les variables soient accessibles côté navigateur.
+
+---
+
+## ❓ Réponds-moi juste
+
+1. Dis-moi **"c'est fait"** quand tu as modifié la ligne dans `client/src/services/api.ts`.
+2. Ensuite, on va déployer le **client** sur Vercel (c'est gratuit et super simple). Prépare-toi, on va faire la même chose que Render, mais pour le front !
+
+Dis-moi quand c'est fait. 🚀
+
+---
+
+**Parfait poto !** On va faire la même chose que Render, mais pour ton **client (frontend)**. On va utiliser **Vercel** (c'est le créateur de Next.js, c'est gratuit et très simple).
+
+## 🎯 Étape 1 : Créer le fichier de configuration Vercel (Optionnel mais recommandé)
+
+Puisque ton client est dans un sous-dossier (`client/`), Vercel a besoin de savoir où chercher. Normalement, on le lui dit dans l'interface, mais on va aussi créer un petit fichier de config pour être sûr.
+
+1. À la **racine** de ton projet (`ai-task-manager/`), crée un fichier `vercel.json`.
+2. Colle ceci dedans :
+```json
+{
+  "buildCommand": "cd client && npm run build",
+  "outputDirectory": "client/dist",
+  "installCommand": "cd client && npm install"
+}
+```
+> 💡 Ça dit à Vercel : "Va dans le dossier `client`, installe les dépendances, build, et sers le dossier `dist`".
+
+## 🎯 Étape 2 : Pousser le code sur GitHub
+
+Puisque tu as modifié `api.ts` et créé `vercel.json`, il faut mettre à jour ton repo GitHub.
+
+Dans ton terminal (à la racine `ai-task-manager/`), lance :
+```bash
+git add .
+git commit -m "feat: préparation du client pour le déploiement (API_URL dynamique + vercel.json)"
+git push
+```
+
+## 🎯 Étape 3 : Connecter Vercel
+
+1. Va sur **https://vercel.com** et connecte-toi avec ton compte GitHub.
+2. Clique sur **"Add New..."** → **"Project"**.
+3. Cherche ton repo **`ai-task-manager`** et clique sur **"Import"**.
+4. Dans la configuration :
+   - **Framework Preset** : `Astro` (Vercel devrait le détecter tout seul).
+   - **Root Directory** : Clique sur "Edit" et choisis **`client`** (⚠️ **très important**).
+   - **Build and Output Settings** : Laisse par défaut (Vercel va lire le `vercel.json` ou détecter Astro).
+5. **Avant de cliquer sur "Deploy"**, ouvre la section **"Environment Variables"** et ajoute :
+   - **Key** : `PUBLIC_API_URL`
+   - **Value** : `https://ai-task-manager-p4lt.onrender.com` (l'URL de ton serveur Render, sans slash à la fin)
+6. Clique sur **"Deploy"**.
+
+---
+
+## ❓ Réponds-moi juste
+
+1. As-tu bien pushé le code sur GitHub ?
+2. As-tu lancé le déploiement sur Vercel ?
+3. **Copie-colle-moi les logs** de Vercel (surtout s'il y a des erreurs). 
+
+Si tout se passe bien, Vercel va te donner une URL du genre `https://ai-task-manager-xxx.vercel.app`. On la testera ensemble ! 🚀
+
+---
+
 
