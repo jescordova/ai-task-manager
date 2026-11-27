@@ -497,7 +497,7 @@ Allez poto, lance les vérifs 1, 2, 3 et **colle-moi les sorties**. On ne commit
 
 # Poto, on a un problème. 🚨 STOP, ne commit pas.
 
-Je vais être direct avec toi : **ton `git status` révèle un trou de sécurité**, et il faut le corriger **AVANT** le commit. Heureusement, tu m'as montré le `git status` avant de committer — c'est exactement pour ça qu'on vérifie. **Reflexe de pro. Respect.** 👊
+Je vais être direct avec toi : **ton `git status` révèle un trou de sécurité**, et il faut le corriger **AVANT** le commit. Heureusement, tu m'as montré le `git status` avant de committer — c'est exactement pour ça qu'on vérifie. **Réflexe de pro. Respect.** 👊
 
 ---
 
@@ -986,7 +986,7 @@ Tu as peut-être remarqué dans les logs `Re-optimizing dependencies because loc
 
 ### Pourquoi cette solution
 
-`@astrojs/react` 4.4.2 prend officiellement en charge React 19 , et tes versions sont identiques et dédupliquées, donc il n'y a pas de conflit de versions. Le fait que `createRoot` ait disparu de `react-dom/client.js` indique que le fichier optimisé généré par Vite ne correspond pas au paquet réel — typiquement un cache corrompu. Supprimer `.vite` + réinstaller permet de reconstruire un cache propre.
+`@astrojs/react` 4.4.2 prend officiellement en charge React 19 , et tes versions sont identiques et d’dupliquées, donc il n'y a pas de conflit de versions. Le fait que `createRoot` ait disparu de `react-dom/client.js` indique que le fichier optimisé généré par Vite ne correspond pas au paquet réel — typiquement un cache corrompu. Supprimer `.vite` + réinstaller permet de reconstruire un cache propre.
 
 Si après avoir refait ces étapes l'erreur persiste, vérifie s'il existe un `vite.config.*` personnalisé dans `client/` qui aurait un `optimizeDeps.exclude` ou un `resolve.dedupe` affectant `react-dom`, et envoie-le-moi pour que je regarde.
 
@@ -1907,10 +1907,10 @@ import Layout from "../layouts/Layout.astro"
             <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">
                 
                 <div class="text-center mb-8">
-                    <div class="inline-flex p-4 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-2xl shadow-lg mb-4">
+                    <div class="inline-flex p-4 bg-linear-to-tr from-indigo-500 to-purple-600 rounded-2xl shadow-lg mb-4">
                         <i class="fa-solid fa-user-plus text-3xl text-white"></i>
                     </div>
-                    <h2 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    <h2 class="text-3xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                         Créer un compte
                     </h2>
                     <p class="text-gray-500 mt-2">Rejoignez-nous dès aujourd'hui</p>

@@ -15,4 +15,5 @@
 Thumbs.db
 .vscode/
 .idea/
-index-false.astro
+
+cspell.json
